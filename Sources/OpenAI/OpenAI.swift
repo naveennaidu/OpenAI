@@ -24,15 +24,17 @@ final public class OpenAI: OpenAIProtocol {
         public let host: String
         public let port: Int
         public let scheme: String
+        public let path: String
         /// Default request timeout
         public let timeoutInterval: TimeInterval
         
-        public init(token: String, organizationIdentifier: String? = nil, host: String = "api.openai.com", port: Int = 443, scheme: String = "https", timeoutInterval: TimeInterval = 60.0) {
+        public init(token: String, organizationIdentifier: String? = nil, host: String = "api.openai.com", port: Int = 443, scheme: String = "https", timeoutInterval: TimeInterval = 60.0, path: String = "") {
             self.token = token
             self.organizationIdentifier = organizationIdentifier
             self.host = host
             self.port = port
             self.scheme = scheme
+            self.path = path
             self.timeoutInterval = timeoutInterval
         }
     }
@@ -202,7 +204,7 @@ extension OpenAI {
         components.scheme = configuration.scheme
         components.host = configuration.host
         components.port = configuration.port
-        components.path = path
+        components.path = configuration.path + path
         return components.url!
     }
 }
