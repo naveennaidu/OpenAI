@@ -22,16 +22,20 @@ public struct EmbeddingsQuery: Codable {
     /// https://platform.openai.com/docs/guides/safety-best-practices/end-user-ids
     public let user: String?
 
+    public let dimensions: Int?
+
     public init(
         input: Self.Input,
         model: Model,
         encodingFormat: Self.EncodingFormat? = nil,
-        user: String? = nil
+        user: String? = nil,
+        dimensions: Int? = nil
     ) {
         self.input = input
         self.model = model
         self.encodingFormat = encodingFormat
         self.user = user
+        self.dimensions = dimensions
     }
 
     public enum Input: Codable, Equatable {
