@@ -85,5 +85,6 @@ public struct EmbeddingsQuery: Codable {
         case model
         case encodingFormat = "encoding_format"
         case user
+        case dimensions
     }
 }
