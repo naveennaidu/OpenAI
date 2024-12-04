@@ -112,7 +112,7 @@ public struct ChatResult: Codable, Equatable {
     }
 
     /// A unique identifier for the chat completion.
-    public let id: String?
+    public let id: String
     /// The object type, which is always chat.completion.
     public let object: String
     /// The Unix timestamp (in seconds) of when the chat completion was created.
@@ -135,6 +135,17 @@ public struct ChatResult: Codable, Equatable {
         case choices
         case usage
         case systemFingerprint = "system_fingerprint"
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decodeIfPresent(String.self, forKey: .id) ?? UUID().uuidString
+        object = try container.decode(String.self, forKey: .object)
+        created = try container.decode(TimeInterval.self, forKey: .created)
+        model = try container.decode(String.self, forKey: .model)
+        choices = try container.decode([Choice].self, forKey: .choices)
+        usage = try container.decodeIfPresent(CompletionUsage.self, forKey: .usage)
+        systemFingerprint = try container.decodeIfPresent(String.self, forKey: .systemFingerprint)
     }
 }
 
