@@ -114,6 +114,22 @@ public struct ChatStreamResult: Codable, Equatable {
             case finishReason = "finish_reason"
             case logprobs
         }
+
+        public init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            index = try container.decode(Int.self, forKey: .index)
+            delta = try container.decode(ChoiceDelta.self, forKey: .delta)
+            
+            // Only decode finishReason if it's not an empty string
+            if let finishReasonString = try container.decodeIfPresent(String.self, forKey: .finishReason),
+               !finishReasonString.isEmpty {
+                finishReason = FinishReason(rawValue: finishReasonString)
+            } else {
+                finishReason = nil
+            }
+            
+            logprobs = try container.decodeIfPresent(ChoiceLogprobs.self, forKey: .logprobs)
+        }
     }
 
     /// A unique identifier for the chat completion. Each chunk has the same ID.
