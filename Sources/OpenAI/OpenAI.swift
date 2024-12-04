@@ -28,7 +28,10 @@ final public class OpenAI: OpenAIProtocol {
         /// Default request timeout
         public let timeoutInterval: TimeInterval
         
-        public init(token: String, organizationIdentifier: String? = nil, host: String = "api.openai.com", port: Int = 443, scheme: String = "https", timeoutInterval: TimeInterval = 60.0, path: String = "") {
+        /// API version path. Default is "/v1". Set empty string "" if your API doesn't use version prefix
+        public let apiVersion: String
+        
+        public init(token: String, organizationIdentifier: String? = nil, host: String = "api.openai.com", port: Int = 443, scheme: String = "https", timeoutInterval: TimeInterval = 60.0, path: String = "", apiVersion: String = "/v1") {
             self.token = token
             self.organizationIdentifier = organizationIdentifier
             self.host = host
@@ -36,6 +39,7 @@ final public class OpenAI: OpenAIProtocol {
             self.scheme = scheme
             self.path = path
             self.timeoutInterval = timeoutInterval
+            self.apiVersion = apiVersion
         }
     }
     
@@ -204,7 +208,7 @@ extension OpenAI {
         components.scheme = configuration.scheme
         components.host = configuration.host
         components.port = configuration.port
-        components.path = configuration.path + path
+        components.path = configuration.path + configuration.apiVersion + path
         return components.url!
     }
 }
@@ -212,20 +216,20 @@ extension OpenAI {
 typealias APIPath = String
 extension APIPath {
     
-    static let completions = "/v1/completions"
-    static let embeddings = "/v1/embeddings"
-    static let chats = "/v1/chat/completions"
-    static let edits = "/v1/edits"
-    static let models = "/v1/models"
-    static let moderations = "/v1/moderations"
+    static let completions = "/completions"
+    static let embeddings = "/embeddings"
+    static let chats = "/chat/completions"
+    static let edits = "/edits"
+    static let models = "/models"
+    static let moderations = "/moderations"
     
-    static let audioSpeech = "/v1/audio/speech"
-    static let audioTranscriptions = "/v1/audio/transcriptions"
-    static let audioTranslations = "/v1/audio/translations"
+    static let audioSpeech = "/audio/speech"
+    static let audioTranscriptions = "/audio/transcriptions"
+    static let audioTranslations = "/audio/translations"
     
-    static let images = "/v1/images/generations"
-    static let imageEdits = "/v1/images/edits"
-    static let imageVariations = "/v1/images/variations"
+    static let images = "/images/generations"
+    static let imageEdits = "/images/edits"
+    static let imageVariations = "/images/variations"
     
     func withPath(_ path: String) -> String {
         self + "/" + path
