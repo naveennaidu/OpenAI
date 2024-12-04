@@ -67,12 +67,31 @@ public struct ChatResult: Codable, Equatable {
             case finishReason = "finish_reason"
         }
 
-        public enum FinishReason: String, Codable, Equatable {
+        public enum FinishReason: String, Codable {
             case stop
             case length
-            case toolCalls = "tool_calls"
             case contentFilter = "content_filter"
+            case toolCalls = "tool_calls"
             case functionCall = "function_call"
+            
+            // Add this initializer to handle empty strings
+            public init(from decoder: Decoder) throws {
+                let container = try decoder.singleValueContainer()
+                let value = try container.decode(String.self)
+                
+                // Handle empty string
+                if value.isEmpty {
+                    self = .stop // or whatever default makes sense
+                    return
+                }
+                
+                // Try normal decoding
+                if let reason = FinishReason(rawValue: value) {
+                    self = reason
+                } else {
+                    self = .stop // fallback for unknown values
+                }
+            }
         }
     }
 
